@@ -1,0 +1,22 @@
+{
+  "name": "huffman_backend",
+  "version": "1.0.0",
+  "description": "Node package for Huffman Compressor",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davidrgb/HuffmanCompressor_Vanilla.git"
+  },
+  "author": "David Russell",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/davidrgb/HuffmanCompressor_Vanilla/issues"
+  },
+  "homepage": "https://github.com/davidrgb/HuffmanCompressor_Vanilla#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

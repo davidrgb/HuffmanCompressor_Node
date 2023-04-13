@@ -24,5 +24,8 @@ export function routing(pathname, hash) {
             route.page();
         }
     }
-    else routes[0].page();
+    else {
+        history.replaceState(null, null, routePathnames.HOME);
+        routes[0].page();
+    }
 }

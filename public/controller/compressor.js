@@ -1,7 +1,5 @@
 import { TreeNode } from '../model/treeNode.js';
 
-import * as fs from 'fs';
-
 async function createFrequencyTable(text) {
     const list = [];
     for (let i = 0; i < text.length; i++) {
@@ -59,10 +57,5 @@ export async function compress(text) {
     const list = await createFrequencyTable(text);
     const head = await constructTree(list);
     const tree = head.constructTreeString();
-    fs.writeFile('tree.txt', tree, (e) => {
-        if (e) throw e;
-        else {
-            console.log('Write successful');
-        }
-    })
+    // Write file
 }
