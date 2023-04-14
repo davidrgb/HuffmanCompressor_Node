@@ -4,9 +4,7 @@ import * as Router from '../controller/route.js';
 import * as Element from './element.js';
 
 export function compressionPage() {
-    let html;
-
-    html = `
+    let html = `
         <div style="align-items: center; display:flex; flex-wrap:wrap; max-width:90vw; min-width:70vw; justify-content:center;">
             <div style="padding: 5vh 5vw;">
                 <h1>Compression</h1>
@@ -38,7 +36,39 @@ export function compressionPage() {
     document.getElementById('form-compress').addEventListener('submit', async e => {
         e.preventDefault();
         const text = e.target.input.value;
-        Element.root.innerHTML = `<div style="align-items:center; display:flex; justify-content:center; min-height: 65vh;"><div class="lds-dual-ring"></div></div>`;
-        await Compressor.compress(text);
+        compressionProgressPage();
+        const data = await Compressor.compress(text);
+        postCompressionPage(data);
+    });
+}
+
+function compressionProgressPage() {
+    let html = `
+        <div style="align-items:center; display:flex; flex-direction:column; justify-content:center; min-height: 65vh;">
+            <div class="row">
+                <h1 id="compression-status"></h1>
+            </div>
+            <div class="row">
+                <div class="lds-dual-ring"></div>
+            </div>
+        </div>
+    `;
+    Element.root.innerHTML = html;
+}
+
+function postCompressionPage(data) {
+    let html = `
+        <div style="align-items:center; display:flex justify-content:center; min-height: 65vh;">
+            <form id="form-download-compressed-file" method="get">
+                <div style="display:flex; justify-content: space-around; width:100%;">
+                    <button type="submit">Download</button>
+                </div>
+            </form>
+        </div>
+    `;
+    Element.root.innerHTML = html;
+    document.getElementById('form-download-compressed-file').addEventListener('submit', async e => {
+        e.preventDefault();
+        await Compressor.createAndDownloadFile(data);
     });
 }

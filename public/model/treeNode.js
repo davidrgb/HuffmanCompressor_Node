@@ -7,12 +7,12 @@
 
 export class TreeNode {
     constructor(data) {
-        this.character = data.character;
-        this.frequency = data.frequency;
-        this.isBridge = data.isBridge;
-        this.parent = data.parent;
-        this.leftChild = data.leftChild;
-        this.rightChild = data.rightChild;
+        this.character = data.character === undefined ? null : data.character;
+        this.frequency = data.frequency === undefined ? 0 : data.frequency;
+        this.isBridge = data.isBridge === undefined ? true : data.isBridge;
+        this.parent = data.parent === undefined ? null : data.parent;
+        this.leftChild = data.leftChild === undefined ? null : data.leftChild;
+        this.rightChild = data.rightChild === undefined ? null : data.rightChild;
     }
     setChildren(leftChild, rightChild) {
         this.frequency = leftChild.frequency + rightChild.frequency;
@@ -25,8 +25,8 @@ export class TreeNode {
         if (this.character === character) return code;
         else {
             let search = null;
-            if (leftChild != null) search = leftChild.getCode(character, code + '0');
-            if (search == null && rightChild != null) search = rightChild.getCode(character, code + '1');
+            if (this.leftChild != null) search = this.leftChild.getCode(character, code + '0');
+            if (search == null && this.rightChild != null) search = this.rightChild.getCode(character, code + '1');
             return search;
         }
     }
@@ -38,7 +38,6 @@ export class TreeNode {
         }
         if (this.leftChild != null) tree += this.leftChild.constructTreeString();
         if (this.rightChild != null) tree += this.rightChild.constructTreeString();
-        if (this.parent == null) tree += '\n\n';
         return tree;
     }
 }
