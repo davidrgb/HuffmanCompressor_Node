@@ -4,20 +4,11 @@ import * as Element from './element.js';
 import * as Compression from './compression.js';
 import * as Decompression from './decompression.js';
 
-export function addEventListeners() {
-    Element.navbarHome.addEventListener('click', () => {
-        history.pushState(null, null, Router.routePathnames.HOME);
-        homePage();
-    });
-}
-
 export function homePage() {
-    Element.navbarHome.style = 'display: none';
-
     let html;
 
     html = `
-        <div style="align-items: center; display: flex; flex-direction: column; height: 85vh; justify-content: center; max-width:90vw;">
+        <div style="align-items: center; display: flex; flex-direction: column; height: 100vh; justify-content: center; max-width:90vw;">
             <div style="padding: 5vh 5vw;">
                 <h1>Huffman Compressor</h1>
                 <div style="font-size: 1.5rem; font-weight:bold; padding: 0 0 5vh 0;">This is a website that uses Huffman coding to compress and decompress text files,

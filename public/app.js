@@ -1,7 +1,5 @@
 import * as Route from '../controller/route.js';
 
-import * as Home from './viewpage/home.js';
-
 window.onload = () => {
     const pathname = window.location.pathname;
     const hash = window.location.hash;
@@ -17,7 +15,4 @@ window.addEventListener('popstate', e => {
 
     Route.routing(pathname, hash);
 });
-
-Home.addEventListeners();
-
 
