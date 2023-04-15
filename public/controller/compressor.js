@@ -127,6 +127,7 @@ export async function compress(text) {
     const bytes = await constructBytes(text, head);
     await Utility.sleep(250);
     return {
+        text: text,
         head: head,
         tree: tree,
         numberOfBits: numberOfBits,

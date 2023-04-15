@@ -52,6 +52,10 @@ h1 {
     font-size: 4rem;
 }
 
+h2 {
+    font-size: 2rem;
+}
+
 input {
     background-color: #242424;
     border: 2px solid white;

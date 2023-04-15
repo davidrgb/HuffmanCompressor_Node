@@ -62,10 +62,16 @@ function postCompressionPage(data) {
         <div style="align-items:center; display:flex; flex-wrap:wrap; height:100vh; justify-content:center; max-width:90vw; min-width:70vw;">
             <div style="padding: 5vh 5vw">
                 <h1>Compression complete!</h1>
+                <h2>
+                   ${Utility.percentage(data.text.length * 8, data.tree.length * 8 + data.numberOfBits.toString().length * 8 + data.numberOfBits + 32)} from ${Utility.fileSize(data.text.length * 8)} to ${Utility.fileSize(data.tree.length * 8 + data.numberOfBits.toString().length * 8 + data.numberOfBits + 32)}
+                </h2>
+                <div style="padding-bottom: 10px;">
+                    <hr class="rounded">
+                </div>
                 <form id="form-download-compressed-file" method="get">
                     <div style="align-items:center; display:flex; flex-wrap:wrap; gap:5vw; justify-content:space-around; width:100%;">
                         <div style="display:flex; flex-direction:column; gap:10px;">
-                            <input type="text" name="filename" placeholder="Filename for download" style="height:100%; padding:5px;" required>
+                            <input type="text" name="filename" placeholder="Filename for download" style="height:100%; padding:5px;">
                             <div id="filename-error" style="display:none"></div>
                         </div>
                         <button type="submit">Download</button>
