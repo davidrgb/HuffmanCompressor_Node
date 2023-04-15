@@ -10,6 +10,7 @@ export function compressionPage() {
             <div style="padding: 5vh 5vw;">
                 <h1>Compression</h1>
                 <form id="form-compress" method="post">
+                    <input id="file-upload" type="file" style="display: none" />
                     <div style="padding-bottom:5vh">
                         <textarea id="textarea-input" name="input" placeholder="Upload a text file or enter text for compression here" cols="50" rows="10" autofocus required></textarea>
                     </div>
@@ -33,6 +34,19 @@ export function compressionPage() {
     `;
 
     Element.root.innerHTML = html;
+
+    document.getElementById('file-upload').onchange = e => {
+        let file = e.target.files[0];
+        var reader = new FileReader();
+        reader.readAsText(file, 'UTF-8');
+        reader.onload = readerEvent => {
+            document.getElementById('textarea-input').value = readerEvent.target.result;
+        }
+    }
+
+    document.getElementById('button-upload').addEventListener('click', function() {
+        document.getElementById('file-upload').click();
+    });
 
     document.getElementById('form-compress').addEventListener('submit', async e => {
         e.preventDefault();
