@@ -1,8 +1,8 @@
-import * as Router from '../controller/route.js';
-
 import * as Element from './element.js';
 
 export function decompressionPage() {
+    Element.navbarHome.style = '';
+
     let html;
 
     html = `

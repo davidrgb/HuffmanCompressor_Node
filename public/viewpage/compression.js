@@ -1,12 +1,13 @@
 import * as Compressor from '../controller/compressor.js';
-import * as Router from '../controller/route.js';
 import * as Utility from '../controller/utility.js';
 
 import * as Element from './element.js';
 
 export function compressionPage() {
+    Element.navbarHome.style = '';
+
     let html = `
-        <div style="align-items: center; display:flex; flex-wrap:wrap; height:100vh; max-width:90vw; min-width:70vw; justify-content:center;">
+        <div style="align-items: center; display:flex; flex-wrap:wrap; height:85vh; max-width:90vw; min-width:70vw; justify-content:center;">
             <div style="padding: 5vh 5vw;">
                 <h1>Compression</h1>
                 <form id="form-compress" method="post">
