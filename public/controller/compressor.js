@@ -135,11 +135,11 @@ export async function compress(text) {
 
 }
 
-export async function createAndDownloadFile(data) {
+export async function createAndDownloadFile(data, filename) {
     const link = document.createElement("a");
     const file = new Blob([data.tree, '\n\n', data.numberOfBits, '\n\n', data.bytes], { type: 'text/plain' });
     link.href = URL.createObjectURL(file);
-    link.download = "compressed.txt";
+    link.download = filename;
     link.click();
     URL.revokeObjectURL(link.href);
 }

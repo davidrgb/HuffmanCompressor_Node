@@ -1,11 +1,12 @@
 import * as Compressor from '../controller/compressor.js';
 import * as Router from '../controller/route.js';
+import * as Utility from '../controller/utility.js';
 
 import * as Element from './element.js';
 
 export function compressionPage() {
     let html = `
-        <div style="align-items: center; display:flex; flex-wrap:wrap; max-width:90vw; min-width:70vw; justify-content:center;">
+        <div style="align-items: center; display:flex; flex-wrap:wrap; height:100vh; max-width:90vw; min-width:70vw; justify-content:center;">
             <div style="padding: 5vh 5vw;">
                 <h1>Compression</h1>
                 <form id="form-compress" method="post">
@@ -44,7 +45,7 @@ export function compressionPage() {
 
 function compressionProgressPage() {
     let html = `
-        <div style="align-items:center; display:flex; flex-direction:column; justify-content:center; min-height: 65vh;">
+        <div style="align-items:center; display:flex; flex-direction:column; height:100vh; justify-content:center;">
             <div class="row">
                 <h1 id="compression-status"></h1>
             </div>
@@ -58,17 +59,36 @@ function compressionProgressPage() {
 
 function postCompressionPage(data) {
     let html = `
-        <div style="align-items:center; display:flex justify-content:center; min-height: 65vh;">
-            <form id="form-download-compressed-file" method="get">
-                <div style="display:flex; justify-content: space-around; width:100%;">
-                    <button type="submit">Download</button>
-                </div>
-            </form>
+        <div style="align-items:center; display:flex; flex-wrap:wrap; height:100vh; justify-content:center; max-width:90vw; min-width:70vw;">
+            <div style="padding: 5vh 5vw">
+                <h1>Compression complete!</h1>
+                <form id="form-download-compressed-file" method="get">
+                    <div style="align-items:center; display:flex; flex-wrap:wrap; gap:5vw; justify-content:space-around; width:100%;">
+                        <div style="display:flex; flex-direction:column; gap:10px;">
+                            <input type="text" name="filename" placeholder="Filename for download" style="height:100%; padding:5px;" required>
+                            <div id="filename-error" style="display:none"></div>
+                        </div>
+                        <button type="submit">Download</button>
+                    </div>
+                </form>
+            </div>
         </div>
     `;
+
     Element.root.innerHTML = html;
     document.getElementById('form-download-compressed-file').addEventListener('submit', async e => {
         e.preventDefault();
-        await Compressor.createAndDownloadFile(data);
+        const filename = e.target.filename.value;
+        let error = Utility.validateFilename(filename);
+        console.log(error);
+        if (error != null) {
+            let filenameErrorElement = document.getElementById('filename-error');
+            filenameErrorElement.style = 'color:red; display:inline; font-weight:bold;';
+            filenameErrorElement.innerHTML = error;
+        }
+        else {
+            document.getElementById('filename-error').style = 'display:none';
+            await Compressor.createAndDownloadFile(data, filename);
+        }
     });
 }
