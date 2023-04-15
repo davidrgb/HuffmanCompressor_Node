@@ -7,19 +7,13 @@
 
 export class TreeNode {
     constructor(data) {
-        this.character = data.character === undefined ? null : data.character;
-        this.frequency = data.frequency === undefined ? 0 : data.frequency;
-        this.isBridge = data.isBridge === undefined ? true : data.isBridge;
-        this.parent = data.parent === undefined ? null : data.parent;
-        this.leftChild = data.leftChild === undefined ? null : data.leftChild;
-        this.rightChild = data.rightChild === undefined ? null : data.rightChild;
-    }
-    setChildren(leftChild, rightChild) {
-        this.frequency = leftChild.frequency + rightChild.frequency;
-        this.leftChild = leftChild;
-        this.rightChild = rightChild;
-        leftChild.parent = this;
-        rightChild.parent = this;
+        
+        this.character = data === undefined || data.character === undefined ? null : data.character;
+        this.frequency = data === undefined || data.frequency === undefined ? 0 : data.frequency;
+        this.isBridge = data === undefined || data.isBridge === undefined ? true : data.isBridge;
+        this.parent = data === undefined || data.parent === undefined ? null : data.parent;
+        this.leftChild = data === undefined || data.leftChild === undefined ? null : data.leftChild;
+        this.rightChild = data === undefined || data.rightChild === undefined ? null : data.rightChild;
     }
     getCode(character, code) {
         if (this.character === character) return code;

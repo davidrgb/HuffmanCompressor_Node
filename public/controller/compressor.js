@@ -67,17 +67,6 @@ async function constructTree(list) {
     return list[0];
 }
 
-function binaryStringFromNumber(number) {
-    let string = "";
-    let remainder;
-    do {
-        remainder = number % 2;
-        string = remainder + string;
-        number /= 2;
-    } while (number > 0);
-    while (string.length < WORD_LENGTH) string = '0' + string;
-}
-
 function numberFromBinaryString(string) {
     let number = 0;
     for (let i = 0; i < string.length; i++) {
@@ -127,6 +116,7 @@ export async function compress(text) {
     const bytes = await constructBytes(text, head);
     await Utility.sleep(250);
     return {
+        text: text,
         head: head,
         tree: tree,
         numberOfBits: numberOfBits,
