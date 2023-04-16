@@ -57,6 +57,10 @@ h2 {
     font-size: 2rem;
 }
 
+i {
+    cursor: pointer;
+}
+
 input {
     background-color: #242424;
     border: 2px solid white;
