@@ -46,7 +46,7 @@ button {
 }
 
 html {
-    font-size: 50%;
+    font-size: 75%;
     height: 100%;
 }
   
@@ -90,7 +90,7 @@ textarea {
 
 @media screen and (min-width: 480px) {
     html {
-        font-size: 60%;
+        font-size: 85%;
     }
 }
 
