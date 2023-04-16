@@ -46,6 +46,7 @@ button {
 }
 
 html {
+    font-size: 50%;
     height: 100%;
 }
   
@@ -84,4 +85,17 @@ textarea {
 
 ::placeholder {
     color: lightgrey;
+}
+
+
+@media screen and (min-width: 480px) {
+    html {
+        font-size: 60%;
+    }
+}
+
+@media screen and (min-width: 640px) {
+    html {
+      font-size: 100%;
+    }
 }
