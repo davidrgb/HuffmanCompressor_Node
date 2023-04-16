@@ -87,6 +87,10 @@ textarea {
     color: lightgrey;
 }
 
+input::placeholder {
+    text-align: center;
+}
+
 
 @media screen and (min-width: 480px) {
     html {

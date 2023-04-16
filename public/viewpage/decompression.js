@@ -100,10 +100,10 @@ export function decompressionPage() {
 function decompressionProgressPage() {
     let html = `
         <div style="align-items:center; display:flex; flex-direction:column; height:100vh; justify-content:center;">
-            <div class="row">
+            <div class="row" style="padding: 5vh 5vw">
                 <h1 id="decompression-status"></h1>
             </div>
-            <div class="row">
+            <div class="row" style="padding: 5vh 5vw">
                 <div class="lds-dual-ring"></div>
             </div>
         </div>
