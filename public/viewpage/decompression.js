@@ -12,8 +12,9 @@ export function decompressionPage() {
                 <h1>Decompression</h1>
                 <form id="form-decompress" method="post">
                     <input id="file-upload" type="file" style="display: none" />
-                    <div style="padding-bottom:5vh">
+                    <div style="align-items: center; display: flex; flex-direction: column; gap: 10px; padding-bottom:5vh">
                         <textarea id="textarea-input" name="input" placeholder="Upload a compressed file for decompression" cols="50" rows="10" readonly></textarea>
+                        <div id="input-error" style="display:none"></div>
                     </div>
                     <br>
                     <div style="display:flex; justify-content: space-around; width:100%;">
@@ -70,7 +71,7 @@ export function decompressionPage() {
             }
             document.getElementById('textarea-input').value = new TextDecoder().decode(text);
         }
-
+        document.getElementById('input-error').style = 'display: none';
     };
 
     document.getElementById('button-upload').addEventListener('click', function() {
@@ -79,6 +80,13 @@ export function decompressionPage() {
 
     document.getElementById('form-decompress').addEventListener('submit', async e => {
         e.preventDefault();
+        const text = e.target.input.value;
+        if (text === null || text.length == 0) {
+            let filenameErrorElement = document.getElementById('input-error');
+            filenameErrorElement.style = 'color:red; display:inline; font-weight:bold;';
+            filenameErrorElement.innerHTML = 'Input required';
+            return;
+        }
         decompressionProgressPage();
         const data = await Decompressor.decompress({
             tree: tree,
@@ -92,10 +100,10 @@ export function decompressionPage() {
 function decompressionProgressPage() {
     let html = `
         <div style="align-items:center; display:flex; flex-direction:column; height:100vh; justify-content:center;">
-            <div class="row">
+            <div class="row" style="padding: 5vh 5vw">
                 <h1 id="decompression-status"></h1>
             </div>
-            <div class="row">
+            <div class="row" style="padding: 5vh 5vw">
                 <div class="lds-dual-ring"></div>
             </div>
         </div>
@@ -132,7 +140,6 @@ function postDecompressionPage(data) {
         e.preventDefault();
         const filename = e.target.filename.value;
         let error = Utility.validateFilename(filename);
-        console.log(error);
         if (error != null) {
             let filenameErrorElement = document.getElementById('filename-error');
             filenameErrorElement.style = 'color:red; display:inline; font-weight:bold;';

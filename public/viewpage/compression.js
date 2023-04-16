@@ -10,8 +10,9 @@ export function compressionPage() {
                 <h1>Compression</h1>
                 <form id="form-compress" method="post">
                     <input id="file-upload" type="file" style="display: none" />
-                    <div style="padding-bottom:5vh">
-                        <textarea id="textarea-input" name="input" placeholder="Upload a text file or enter text for compression here" cols="50" rows="10" autofocus required></textarea>
+                    <div style="align-items: center; display: flex; flex-direction: column; gap: 10px; padding-bottom:5vh">
+                        <textarea id="textarea-input" name="input" placeholder="Upload a text file or enter text for compression here" cols="50" rows="10" autofocus></textarea>
+                        <div id="input-error" style="display:none"></div>
                     </div>
                     <br>
                     <div style="display:flex; justify-content: space-around; width:100%;">
@@ -41,6 +42,7 @@ export function compressionPage() {
         reader.onload = readerEvent => {
             document.getElementById('textarea-input').value = readerEvent.target.result;
         }
+        document.getElementById('input-error').style = 'display: none';
     }
 
     document.getElementById('button-upload').addEventListener('click', function() {
@@ -50,6 +52,12 @@ export function compressionPage() {
     document.getElementById('form-compress').addEventListener('submit', async e => {
         e.preventDefault();
         const text = e.target.input.value;
+        if (text === null || text.length == 0) {
+            let filenameErrorElement = document.getElementById('input-error');
+            filenameErrorElement.style = 'color:red; display:inline; font-weight:bold;';
+            filenameErrorElement.innerHTML = 'Input required';
+            return;
+        }
         compressionProgressPage();
         const data = await Compressor.compress(text);
         postCompressionPage(data);
@@ -59,10 +67,10 @@ export function compressionPage() {
 function compressionProgressPage() {
     let html = `
         <div style="align-items:center; display:flex; flex-direction:column; height:100vh; justify-content:center;">
-            <div class="row">
+            <div class="row" style="padding: 5vh 5vw">
                 <h1 id="compression-status"></h1>
             </div>
-            <div class="row">
+            <div class="row" style="padding: 5vh 5vw">
                 <div class="lds-dual-ring"></div>
             </div>
         </div>
@@ -99,7 +107,6 @@ function postCompressionPage(data) {
         e.preventDefault();
         const filename = e.target.filename.value;
         let error = Utility.validateFilename(filename);
-        console.log(error);
         if (error != null) {
             let filenameErrorElement = document.getElementById('filename-error');
             filenameErrorElement.style = 'color:red; display:inline; font-weight:bold;';

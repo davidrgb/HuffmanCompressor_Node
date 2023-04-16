@@ -46,6 +46,7 @@ button {
 }
 
 html {
+    font-size: 75%;
     height: 100%;
 }
   
@@ -55,6 +56,10 @@ h1 {
 
 h2 {
     font-size: 2rem;
+}
+
+i {
+    cursor: pointer;
 }
 
 input {
@@ -80,4 +85,21 @@ textarea {
 
 ::placeholder {
     color: lightgrey;
+}
+
+input::placeholder {
+    text-align: center;
+}
+
+
+@media screen and (min-width: 480px) {
+    html {
+        font-size: 85%;
+    }
+}
+
+@media screen and (min-width: 640px) {
+    html {
+      font-size: 100%;
+    }
 }
