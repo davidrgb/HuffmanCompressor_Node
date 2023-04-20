@@ -78,11 +78,11 @@ function binaryStringFromNumber(number) {
 export async function decompress(data) {
     const tree = data.tree;
     const head = await reconstructTree(tree);
-    Utility.sleep(250);
+    await Utility.sleep(250);
     let numberOfBits = data.numberOfBits;
     const bytes = data.bytes;
     const text = await reconstructText(bytes, head, numberOfBits);
-    Utility.sleep(250);
+    await Utility.sleep(250);
     return {
         input: `${data.tree}\n\n${data.numberOfBits}\n\n${new TextDecoder().decode(data.bytes)}`,
         text: text,
