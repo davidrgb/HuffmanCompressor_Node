@@ -93,7 +93,7 @@ export async function decompress(data) {
 
 export async function createAndDownloadFile(data, filename) {
     const link = document.createElement("a");
-    const file = new Blob([data.text], { type: 'text/plain' });
+    const file = new Blob([data.text], { type: 'text/plain; charset=utf-8' });
     link.href = URL.createObjectURL(file);
     link.download = filename;
     link.click();
