@@ -19,8 +19,8 @@ export function decompressionPage() {
                         </div>
                         <br>
                         <div style="display:flex; justify-content: space-around; width:100%;">
-                            <button type="button" id="button-upload">Upload</button>
-                            <button type="submit">Decompress</button>
+                            <button id="button-upload" type="button">Upload</button>
+                            <button id="button-submit" type="submit">Decompress</button>
                         </div>
                     </form>
                 </div>
@@ -76,8 +76,7 @@ export function decompressionPage() {
                         + encoder.encode('\n\n').length;                                // as well as the newline separators.
             bytes = utf8text.subarray(index);                                           // Assign the subarray of UTF-8 bytes (these bytes cannot be decoded before decompression since some integers are not represented by characters)
             document.getElementById('textarea-input').value = text;                     // Set the value of the textarea to the fully decoded UTF-8 bytes
-            document.getElementById('div-page').style = 'display: block';               // Show the decompression page
-            document.getElementById('div-uploading').style = 'display: none';           // Hide the uploading status page
+            document.getElementById('button-submit').click();
         }
     };
 

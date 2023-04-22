@@ -17,8 +17,8 @@ export function compressionPage() {
                         </div>
                         <br>
                         <div style="display:flex; justify-content: space-around; width:100%;">
-                            <button type="button" id="button-upload">Upload</button>
-                            <button type="submit">Compress</button>
+                            <button id="button-upload" type="button">Upload</button>
+                            <button id="button-submit" type="submit">Compress</button>
                         </div>
                     </form>
                 </div>
@@ -60,9 +60,7 @@ export function compressionPage() {
         reader.readAsText(file, 'UTF-8');
         reader.onload = async readerEvent => {
             document.getElementById('textarea-input').value = readerEvent.target.result;
-            await Utility.sleep(50);
-            document.getElementById('div-page').style = 'display: block';
-            document.getElementById('div-uploading').style = 'display: none';
+            document.getElementById('button-submit').click();
         }
         
     }
