@@ -64,35 +64,21 @@ export function decompressionPage() {
 
         reader.readAsArrayBuffer(file);
         reader.onload = async readerEvent => {
-            let text = new Uint8Array(readerEvent.target.result);
-            let string = "";
-            for (let i = 0; i < text.length; i++) {
-                if (tree === undefined || tree === null) {
-                    let currentChar = String.fromCharCode(text[i]);
-                    if (currentChar === '\n' && String.fromCharCode(text[i + 1]) === '\n'){
-                        tree = string;
-                        string = "";
-                        i++;
-                    }
-                    else string += String.fromCharCode(text[i]);
-                }
-                else if (numberOfBits === undefined || numberOfBits === null) {
-                    let currentChar = String.fromCharCode(text[i]);
-                    if (currentChar === '\n' && String.fromCharCode(text[i + 1]) === '\n'){
-                        numberOfBits = Number(string);
-                        i++;
-                    }
-                    else string += String.fromCharCode(text[i]);
-                }
-                else {
-                    bytes = text.subarray(i);
-                    break;
-                }
-            }
-            document.getElementById('textarea-input').value = new TextDecoder().decode(text);
-            await Utility.sleep(50);
-            document.getElementById('div-page').style = 'display: block';
-            document.getElementById('div-uploading').style = 'display: none';
+            let utf8text = new Uint8Array(readerEvent.target.result);                   // Get full content of compressed file as byte array to preserve character encoding
+            let encoder = new TextEncoder();                                            // Create an encoder to convert strings to UTF-8 byte arrays
+            let decoder = new TextDecoder();                                            // Create a decoder to convert UTF-8 byte arrays to strings
+            let text = decoder.decode(utf8text);                                        // Decode full UTF-8 byte array of compressed file to a string
+            let sections = text.split('\n\n');                                          // Split the string into the tree, numberOfBits, and bytes sections
+            tree = sections[0];                                                         // Assign the tree section string
+            numberOfBits = Number(sections[1]);                                         // Convert and assign the numberOfBits section string
+            let index = encoder.encode(tree).length + encoder.encode('\n\n').length     // Calculate the index of the beginning of the bytes section in the
+                        + encoder.encode(numberOfBits.toString()).length                // original UTF-8 byte array by encoding the tree and numberOfBits sections
+                        + encoder.encode('\n\n').length;                                // as well as the newline separators.
+            bytes = utf8text.subarray(index);                                           // Assign the subarray of UTF-8 bytes (these bytes cannot be decoded before decompression since some integers are not represented by characters)
+            document.getElementById('textarea-input').value = text;                     // Set the value of the textarea to the fully decoded UTF-8 bytes
+            await Utility.sleep(50);                                                    // Allow time for GUI updates
+            document.getElementById('div-page').style = 'display: block';               // Show the decompression page
+            document.getElementById('div-uploading').style = 'display: none';           // Hide the uploading status page
         }
     };
 
