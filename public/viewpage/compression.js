@@ -5,44 +5,66 @@ import * as Element from './element.js';
 
 export function compressionPage() {
     let html = `
-        <div style="align-items: center; display:flex; flex-wrap:wrap; height:100vh; max-width:90vw; min-width:70vw; justify-content:center;">
-            <div style="padding: 5vh 5vw;">
-                <h1>Compression</h1>
-                <form id="form-compress" method="post">
-                    <input id="file-upload" type="file" style="display: none" />
-                    <div style="align-items: center; display: flex; flex-direction: column; gap: 10px; padding-bottom:5vh">
-                        <textarea id="textarea-input" name="input" placeholder="Upload a text file or enter text for compression here" cols="50" rows="10" autofocus></textarea>
-                        <div id="input-error" style="display:none"></div>
-                    </div>
-                    <br>
-                    <div style="display:flex; justify-content: space-around; width:100%;">
-                        <button type="button" id="button-upload">Upload</button>
-                        <button type="submit">Compress</button>
-                    </div>
-                </form>
+        <div id="div-page">
+            <div style="align-items: center; display:flex; flex-wrap:wrap; height:100vh; max-width:90vw; min-width:70vw; justify-content:center;">
+                <div style="padding: 5vh 5vw;">
+                    <h1>Compression</h1>
+                    <form id="form-compress" method="post">
+                        <input id="file-upload" type="file" style="display: none" />
+                        <div style="align-items: center; display: flex; flex-direction: column; gap: 10px; padding-bottom:5vh">
+                            <textarea id="textarea-input" name="input" placeholder="Upload a text file or enter text for compression here" cols="50" rows="10" autofocus></textarea>
+                            <div id="input-error" style="display:none"></div>
+                        </div>
+                        <br>
+                        <div style="display:flex; justify-content: space-around; width:100%;">
+                            <button type="button" id="button-upload">Upload</button>
+                            <button type="submit">Compress</button>
+                        </div>
+                    </form>
+                </div>
+                <div style="font-size:1.5rem; font-weight: bold; padding: 5vh 5vw; max-width:40vw; min-width: 30vw;">
+                    <hr class="rounded">
+                    Huffman codes are the most efficient method of compressing individual characters, 
+                    allowing encoded characters to take up as little as 1 bit. To achieve this, each
+                    character present in the initial text is assigned a unique bit string. If a character
+                    appears frequently, it is assigned a shorter bit string, ultimately resulting in an
+                    inverse relation between character frequency and encoded size.
+                    <hr class="rounded">
+                </div>
             </div>
-            <div style="font-size:1.5rem; font-weight: bold; padding: 5vh 5vw; max-width:40vw; min-width: 30vw;">
-                <hr class="rounded">
-                Huffman codes are the most efficient method of compressing individual characters, 
-                allowing encoded characters to take up as little as 1 bit. To achieve this, each
-                character present in the initial text is assigned a unique bit string. If a character
-                appears frequently, it is assigned a shorter bit string, ultimately resulting in an
-                inverse relation between character frequency and encoded size.
-                <hr class="rounded">
+        </div>
+        <div id="div-uploading" style="display: none">
+            <div style="align-items:center; display:flex; flex-direction:column; height:100vh; justify-content:center;">
+                <div class="row">
+                    <h1>Uploading</h1>
+                </div>
+                <div class="row">
+                    <h2>This may take a moment</h2>
+                </div>
+                <div class="row">
+                    <div class="lds-dual-ring"></div>
+                </div>
             </div>
         </div>
     `;
 
     Element.root.innerHTML = html;
 
-    document.getElementById('file-upload').onchange = e => {
+    document.getElementById('file-upload').onchange = async e => {
+        document.getElementById('input-error').style = 'display: none';
+        document.getElementById('div-page').style = 'display: none';
+        document.getElementById('div-uploading').style = 'display: block';
+        await Utility.sleep(50);
         let file = e.target.files[0];
         var reader = new FileReader();
         reader.readAsText(file, 'UTF-8');
-        reader.onload = readerEvent => {
+        reader.onload = async readerEvent => {
             document.getElementById('textarea-input').value = readerEvent.target.result;
+            await Utility.sleep(50);
+            document.getElementById('div-page').style = 'display: block';
+            document.getElementById('div-uploading').style = 'display: none';
         }
-        document.getElementById('input-error').style = 'display: none';
+        
     }
 
     document.getElementById('button-upload').addEventListener('click', function() {

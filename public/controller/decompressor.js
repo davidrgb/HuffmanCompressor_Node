@@ -10,6 +10,7 @@ function setDecompressionStatus(state) {
 
 async function reconstructTree(tree) {
     setDecompressionStatus('Reconstructing tree');
+    await Utility.sleep(50);
     let head = new TreeNode();
     let currentNode = head;
     for (let i = 0; i < tree.length; i++) {
@@ -47,6 +48,7 @@ async function reconstructTree(tree) {
 
 async function reconstructText(bytes, head, numberOfBits) {
     setDecompressionStatus('Reconstructing text');
+    await Utility.sleep(50);
     let text = "";
     let currentNode = head;
 
@@ -78,11 +80,11 @@ function binaryStringFromNumber(number) {
 export async function decompress(data) {
     const tree = data.tree;
     const head = await reconstructTree(tree);
-    Utility.sleep(250);
+    await Utility.sleep(250);
     let numberOfBits = data.numberOfBits;
     const bytes = data.bytes;
     const text = await reconstructText(bytes, head, numberOfBits);
-    Utility.sleep(250);
+    await Utility.sleep(250);
     return {
         input: `${data.tree}\n\n${data.numberOfBits}\n\n${new TextDecoder().decode(data.bytes)}`,
         text: text,
@@ -93,7 +95,7 @@ export async function decompress(data) {
 
 export async function createAndDownloadFile(data, filename) {
     const link = document.createElement("a");
-    const file = new Blob([data.text], { type: 'text/plain' });
+    const file = new Blob([data.text], { type: 'text/plain; charset=utf-8' });
     link.href = URL.createObjectURL(file);
     link.download = filename;
     link.click();
