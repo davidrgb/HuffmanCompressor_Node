@@ -11,6 +11,7 @@ function setCompressionStatus(state) {
 
 async function createFrequencyTable(text) {
     setCompressionStatus('Creating frequency table');
+    await Utility.sleep(50);
     const list = [];
     for (let i = 0; i < text.length; i++) {
         let currentChar = text[i];
@@ -39,6 +40,7 @@ async function createFrequencyTable(text) {
 
 async function constructTree(list) {
     setCompressionStatus('Constructing tree');
+    await Utility.sleep(50);
     while (list.length > 1) {
         let firstNode = list[0];
         list.splice(0, 1);
@@ -77,6 +79,7 @@ function numberFromBinaryString(string) {
 
 async function constructBytes(text, head) {
     setCompressionStatus('Constucting bytes');
+    await Utility.sleep(50);
     const bytesAsNumbers = [];
     let currentCode = "";
     for (let i = 0; i < text.length; i++) {

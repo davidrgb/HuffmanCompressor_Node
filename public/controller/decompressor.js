@@ -10,6 +10,7 @@ function setDecompressionStatus(state) {
 
 async function reconstructTree(tree) {
     setDecompressionStatus('Reconstructing tree');
+    await Utility.sleep(50);
     let head = new TreeNode();
     let currentNode = head;
     for (let i = 0; i < tree.length; i++) {
@@ -47,6 +48,7 @@ async function reconstructTree(tree) {
 
 async function reconstructText(bytes, head, numberOfBits) {
     setDecompressionStatus('Reconstructing text');
+    await Utility.sleep(50);
     let text = "";
     let currentNode = head;
 
