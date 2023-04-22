@@ -76,7 +76,6 @@ export function decompressionPage() {
                         + encoder.encode('\n\n').length;                                // as well as the newline separators.
             bytes = utf8text.subarray(index);                                           // Assign the subarray of UTF-8 bytes (these bytes cannot be decoded before decompression since some integers are not represented by characters)
             document.getElementById('textarea-input').value = text;                     // Set the value of the textarea to the fully decoded UTF-8 bytes
-            await Utility.sleep(50);                                                    // Allow time for GUI updates
             document.getElementById('div-page').style = 'display: block';               // Show the decompression page
             document.getElementById('div-uploading').style = 'display: none';           // Hide the uploading status page
         }
