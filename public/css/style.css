@@ -23,6 +23,41 @@
     }
 }
 
+.description {
+    max-width: 90vw;
+    min-width: 80vw;
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes fade-out {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+.first-fade {
+    opacity: 0;
+}
+
+.second-fade {
+    opacity: 0;
+}
+
+.third-fade {
+    opacity: 0;
+}
+
 body {
     background-color: #242424;
     align-items: center;
@@ -41,13 +76,23 @@ button {
     border: 2px solid white;
     border-radius: 5px;
     color: white;
+    cursor: pointer;
     font-size: 1.5rem;
     padding: 10px;
+    transition: all is ease;
+    transition-duration: 0.2s;
+}
+
+button:hover {
+    background-color: white;
+    color: #242424
 }
 
 html {
+    animation-fill-mode: forwards;
     font-size: 75%;
     height: 100%;
+    overflow-x: hidden;
 }
   
 h1 {
@@ -59,7 +104,19 @@ h2 {
 }
 
 i {
+    background-color: #242424;
+    border-radius: 5px;
+    color: white;
     cursor: pointer;
+    font-size: 3rem;
+    padding: 5px;
+    transition: all is ease;
+    transition: 0.2s;
+}
+
+i:hover {
+    background-color: white;
+    color: #242424;
 }
 
 input {
@@ -68,7 +125,14 @@ input {
     border-color: lightgrey;
     border-radius: 5px;
     color: white;
+    filter: drop-shadow(0 0 0 white);
     font-size: large;
+    transition: all is ease;
+    transition: 0.5s;
+}
+
+input:hover {
+    filter: drop-shadow(0.1rem 0.1rem 0.5rem white);
 }
 
 textarea {
@@ -77,10 +141,17 @@ textarea {
     border-color: lightgrey;
     border-radius: 5px;
     color: white;
+    filter: drop-shadow(0 0 0 white);
     font-size: large;
     max-width: 80vw;
     padding: 5px;
     resize: none;
+    transition: all is ease;
+    transition-duration: 0.5s;
+}
+
+textarea:focus {
+    filter: drop-shadow(0.1rem 0.1rem 0.5rem white);
 }
 
 ::placeholder {
@@ -93,13 +164,42 @@ input::placeholder {
 
 
 @media screen and (min-width: 480px) {
+    .description {
+        max-width: 85vw;
+        min-width: 70vw;
+    }
     html {
         font-size: 85%;
     }
 }
 
 @media screen and (min-width: 640px) {
+    .description {
+        max-width: 70vw;
+        min-width: 60vw;
+    }
     html {
       font-size: 100%;
+    }
+}
+
+@media screen and (min-width: 800px) {
+    .description {
+        max-width: 60vw;
+        min-width: 50vw;
+    }
+}
+
+@media screen and (min-width: 1000px) {
+    .description {
+        max-width: 50vw;
+        min-width: 40vw;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    .description {
+        max-width: 40vw;
+        min-width: 30vw;
     }
 }

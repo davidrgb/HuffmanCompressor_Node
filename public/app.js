@@ -1,4 +1,5 @@
 import * as Router from './controller/route.js';
+import * as Utility from './controller/utility.js';
 
 import * as Home from './viewpage/home.js';
 
@@ -18,8 +19,9 @@ window.addEventListener('popstate', e => {
     Router.routing(pathname, hash);
 });
 
-document.getElementById('icon-home').addEventListener('click', () => {
+document.getElementById('icon-home').addEventListener('click', async () => {
     history.pushState(null, null, Router.routePathnames.HOME);
+    await Utility.fadeOut();
     Home.homePage();
 });
 

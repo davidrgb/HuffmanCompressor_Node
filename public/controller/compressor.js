@@ -78,7 +78,7 @@ function numberFromBinaryString(string) {
 }
 
 async function constructBytes(text, head) {
-    setCompressionStatus('Constucting bytes');
+    setCompressionStatus('Constructing bytes');
     await Utility.sleep(50);
     const bytesAsNumbers = [];
     let currentCode = "";
