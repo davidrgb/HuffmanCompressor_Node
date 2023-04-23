@@ -28,6 +28,36 @@
     min-width: 80vw;
 }
 
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes fade-out {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+.first-fade {
+    opacity: 0;
+}
+
+.second-fade {
+    opacity: 0;
+}
+
+.third-fade {
+    opacity: 0;
+}
+
 body {
     background-color: #242424;
     align-items: center;
@@ -59,6 +89,7 @@ button:hover {
 }
 
 html {
+    animation-fill-mode: forwards;
     font-size: 75%;
     height: 100%;
     overflow-x: hidden;
@@ -94,7 +125,14 @@ input {
     border-color: lightgrey;
     border-radius: 5px;
     color: white;
+    filter: drop-shadow(0 0 0 white);
     font-size: large;
+    transition: all is ease;
+    transition: 0.5s;
+}
+
+input:hover {
+    filter: drop-shadow(0.1rem 0.1rem 0.5rem white);
 }
 
 textarea {
@@ -114,7 +152,6 @@ textarea {
 
 textarea:focus {
     filter: drop-shadow(0.1rem 0.1rem 0.5rem white);
-    transform: scale(1.025);
 }
 
 ::placeholder {

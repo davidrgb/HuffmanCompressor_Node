@@ -3,13 +3,13 @@ import * as Utility from '../controller/utility.js';
 
 import * as Element from './element.js';
 
-export function compressionPage() {
+export async function compressionPage() {
     let html = `
         <div id="div-page">
             <div style="align-items: center; display:flex; flex-wrap:wrap; height:100vh; max-width:90vw; min-width:70vw; justify-content:center;">
                 <div style="padding: 5vh 5vw;">
-                    <h1>Compression</h1>
-                    <form id="form-compress" method="post">
+                    <h1 class="first-fade">Compression</h1>
+                    <form id="form-compress" class="second-fade" method="post">
                         <input id="file-upload" type="file" style="display: none" />
                         <div style="align-items: center; display: flex; flex-direction: column; gap: 10px; padding-bottom:5vh">
                             <textarea id="textarea-input" name="input" placeholder="Upload a text file or enter text for compression here" cols="50" rows="10"></textarea>
@@ -22,7 +22,7 @@ export function compressionPage() {
                         </div>
                     </form>
                 </div>
-                <div class="description" style="font-size:1.5rem; font-weight: bold; padding: 5vh 5vw;">
+                <div class="description third-fade" style="font-size:1.5rem; font-weight: bold; padding: 5vh 5vw;">
                     <hr class="rounded">
                     Huffman codes are the most efficient method of compressing individual characters, 
                     allowing encoded characters to take up as little as 1 bit. To achieve this, each
@@ -35,13 +35,13 @@ export function compressionPage() {
         </div>
         <div id="div-uploading" style="display: none">
             <div style="align-items:center; display:flex; flex-direction:column; height:100vh; justify-content:center;">
-                <div class="row">
+                <div class="row first-fade">
                     <h1>Uploading</h1>
                 </div>
-                <div class="row">
+                <div class="row second-fade">
                     <h2>This may take a moment</h2>
                 </div>
-                <div class="row">
+                <div class="row third-fade">
                     <div class="lds-dual-ring"></div>
                 </div>
             </div>
@@ -50,11 +50,14 @@ export function compressionPage() {
 
     Element.root.innerHTML = html;
 
+    await Utility.fadeIn();
+
     document.getElementById('file-upload').onchange = async e => {
+        await Utility.fadeOut();
         document.getElementById('input-error').style = 'display: none';
         document.getElementById('div-page').style = 'display: none';
         document.getElementById('div-uploading').style = 'display: block';
-        await Utility.sleep(50);
+        await Utility.fadeIn();
         let file = e.target.files[0];
         var reader = new FileReader();
         reader.readAsText(file, 'UTF-8');
@@ -78,38 +81,41 @@ export function compressionPage() {
             filenameErrorElement.innerHTML = 'Input required';
             return;
         }
-        compressionProgressPage();
+        await Utility.fadeOut();
+        await compressionProgressPage();
         const data = await Compressor.compress(text);
-        postCompressionPage(data);
+        await Utility.fadeOut();
+        await postCompressionPage(data);
     });
 }
 
-function compressionProgressPage() {
+async function compressionProgressPage() {
     let html = `
         <div style="align-items:center; display:flex; flex-direction:column; height:100vh; justify-content:center;">
-            <div class="row" style="padding: 5vh 5vw">
-                <h1 id="compression-status"></h1>
+            <div class="row first-fade" style="padding: 5vh 5vw">
+                <h1 id="compression-status">Starting compressor</h1>
             </div>
-            <div class="row" style="padding: 5vh 5vw">
+            <div class="row second-fade" style="padding: 5vh 5vw">
                 <div class="lds-dual-ring"></div>
             </div>
         </div>
     `;
     Element.root.innerHTML = html;
+    await Utility.fadeIn();
 }
 
-function postCompressionPage(data) {
+async function postCompressionPage(data) {
     let html = `
         <div style="align-items:center; display:flex; flex-wrap:wrap; height:100vh; justify-content:center; max-width:90vw; min-width:70vw;">
             <div style="padding: 5vh 5vw">
-                <h1>Compression complete!</h1>
-                <h2>
+                <h1 class="first-fade">Compression complete!</h1>
+                <h2 class="second-fade">
                    ${Utility.percentage(data.text.length * 8, data.tree.length * 8 + data.numberOfBits.toString().length * 8 + data.numberOfBits + 32)} from ${Utility.fileSize(data.text.length * 8)} to ${Utility.fileSize(data.tree.length * 8 + data.numberOfBits.toString().length * 8 + data.numberOfBits + 32)}
                 </h2>
-                <div style="padding-bottom: 10px;">
+                <div class="second-fade" style="padding-bottom: 10px;">
                     <hr class="rounded">
                 </div>
-                <form id="form-download-compressed-file" method="get">
+                <form id="form-download-compressed-file" class="third-fade" method="get">
                     <div style="align-items:center; display:flex; flex-wrap:wrap; gap:5vw; justify-content:space-around; width:100%;">
                         <div style="display:flex; flex-direction:column; gap:10px;">
                             <input type="text" name="filename" placeholder="Filename for download" style="height:100%; padding:5px;">
@@ -123,6 +129,8 @@ function postCompressionPage(data) {
     `;
 
     Element.root.innerHTML = html;
+    await Utility.fadeIn();
+    
     document.getElementById('form-download-compressed-file').addEventListener('submit', async e => {
         e.preventDefault();
         const filename = e.target.filename.value;
