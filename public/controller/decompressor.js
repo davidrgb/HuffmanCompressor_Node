@@ -86,9 +86,10 @@ export async function decompress(data) {
     const text = await reconstructText(bytes, head, numberOfBits);
     await Utility.sleep(250);
     return {
-        input: `${data.tree}\n\n${data.numberOfBits}\n\n${new TextDecoder().decode(data.bytes)}`,
         text: text,
+        tree: tree,
         head: head,
+        numberOfBits: numberOfBits,
         bytes: bytes,
     };
 }

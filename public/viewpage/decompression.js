@@ -124,12 +124,15 @@ async function decompressionProgressPage() {
 }
 
 async function postDecompressionPage(data) {
+    let encoder = new TextEncoder();
+    let inputSize = (encoder.encode(data.tree).length + `\n\n${data.numberOfBits}\n\n`.length + data.bytes.length) * 8;
+    let outputSize = encoder.encode(data.text).length * 8;
     let html = `
         <div style="align-items:center; display:flex; flex-wrap:wrap; height:100vh; justify-content:center; max-width:90vw; min-width:70vw;">
             <div style="padding: 5vh 5vw">
                 <h1 class="first-fade">Decompression complete!</h1>
                 <h2 class="second-fade">
-                   ${Utility.percentage(data.input.length * 8, data.text.length * 8)} from ${Utility.fileSize(data.input.length * 8)} to ${Utility.fileSize(data.text.length * 8)}
+                   ${Utility.percentage(inputSize, outputSize)} from ${Utility.fileSize(inputSize)} to ${Utility.fileSize(outputSize)}
                 </h2>
                 <div class="second-fade" style="padding-bottom: 10px;">
                     <hr class="rounded">
