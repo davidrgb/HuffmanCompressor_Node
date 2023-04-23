@@ -12,7 +12,7 @@ export function homePage() {
             <div style="padding: 5vh 5vw;">
                 <h1>Huffman Compressor</h1>
                 <div style="font-size: 1.5rem; font-weight:bold; padding: 0 0 5vh 0;">This is a website that uses Huffman coding to compress and decompress text files,
-                <br>built with Node.js.</div>
+                <br>built with JavaScript and served using Express.</div>
                     <div style="display:flex; justify-content: space-around;">
                         <button id='button-open-compression'>Compress</button>
                         <button id='button-open-decompression'>Decompress</button>

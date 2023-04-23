@@ -12,7 +12,7 @@ export function compressionPage() {
                     <form id="form-compress" method="post">
                         <input id="file-upload" type="file" style="display: none" />
                         <div style="align-items: center; display: flex; flex-direction: column; gap: 10px; padding-bottom:5vh">
-                            <textarea id="textarea-input" name="input" placeholder="Upload a text file or enter text for compression here" cols="50" rows="10" autofocus></textarea>
+                            <textarea id="textarea-input" name="input" placeholder="Upload a text file or enter text for compression here" cols="50" rows="10"></textarea>
                             <div id="input-error" style="display:none"></div>
                         </div>
                         <br>
