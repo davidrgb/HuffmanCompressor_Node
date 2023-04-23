@@ -22,7 +22,7 @@ export function compressionPage() {
                         </div>
                     </form>
                 </div>
-                <div style="font-size:1.5rem; font-weight: bold; padding: 5vh 5vw; max-width:40vw; min-width: 30vw;">
+                <div class="description" style="font-size:1.5rem; font-weight: bold; padding: 5vh 5vw;">
                     <hr class="rounded">
                     Huffman codes are the most efficient method of compressing individual characters, 
                     allowing encoded characters to take up as little as 1 bit. To achieve this, each

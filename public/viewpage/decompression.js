@@ -24,7 +24,7 @@ export function decompressionPage() {
                         </div>
                     </form>
                 </div>
-                <div style="font-size:1.5rem; font-weight: bold; padding: 5vh 5vw; max-width:40vw; min-width: 30vw;">
+                <div class="description" style="font-size:1.5rem; font-weight: bold; padding: 5vh 5vw;">
                     <hr class="rounded">
                     To decompress a file that has been compressed using Huffman codes, the Huffman tree must be reconstructed.
                     Using the compressed bit string, the tree is traversed from the head such that every 0 leads to the next left node
