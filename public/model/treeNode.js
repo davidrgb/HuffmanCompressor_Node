@@ -1,13 +1,5 @@
-// Character
-// Frequency
-// Is Bridge
-// Parent
-// Left Child
-// Right Child
-
 export class TreeNode {
     constructor(data) {
-        
         this.character = data === undefined || data.character === undefined ? null : data.character;
         this.frequency = data === undefined || data.frequency === undefined ? 0 : data.frequency;
         this.isBridge = data === undefined || data.isBridge === undefined ? true : data.isBridge;
