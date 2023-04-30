@@ -131,3 +131,23 @@ export async function fadeOut() {
     
     await sleep(1000);
 }
+
+export function displayCharacter(character) {
+    let code = character.charCodeAt(0);
+    switch (code) {
+        case 9:
+            return 'HT';
+        case 10:
+            return 'LF';
+        case 13:
+            return 'CR';
+        case 32:
+            return 'SP';
+        case 160:
+            return 'NB';
+        case 173:
+            return 'SH';
+        default:
+            return character;
+    }
+}
