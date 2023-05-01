@@ -179,7 +179,7 @@ async function postDecompressionPage(data) {
         outerDiv.style = 'align-items: center; display: flex; flex-direction: column; gap: 5vh; justify-content: center; max-width: 90vw; padding-top: 5vh;';
         outerDiv.className = 'third-fade';
         let mainDiv = document.createElement('div');
-        mainDiv.style = 'align-items: center; display: flex; flex-direction: row; flex-wrap: wrap; gap: 5vw; justify-content: center;';
+        mainDiv.style = 'align-items: center; display: flex; flex-direction: row; gap: 5vw; justify-content: center;';
         let textDiv = document.createElement('div-text');
         textDiv.style = 'border: 2px solid white; border-radius: 5px; font-size: 1.25rem; font-weight: bold; padding: 5px; overflow-x: hidden; overflow-y: scroll;';
         textDiv.className = 'side-by-side';
