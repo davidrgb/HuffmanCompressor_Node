@@ -58,6 +58,35 @@
     opacity: 0;
 }
 
+.side-by-side {
+    width: 30vw;
+    height: 30vh;
+}
+
+.character-div {
+    display: inline;
+    cursor: pointer;
+    max-height: 1.5rem;
+}
+
+@keyframes character-hover-in {
+    0% {
+        color: white;
+    }
+    100% {
+        color: lightseagreen;
+    }
+}
+
+@keyframes character-hover-out {
+    0% {
+        color: lightseagreen;
+    }
+    100% {
+        color: white;
+    }
+}
+
 body {
     background-color: #242424;
     align-items: center;
@@ -86,6 +115,16 @@ button {
 button:hover {
     background-color: white;
     color: #242424
+}
+
+button:disabled {
+    background-color: #242424;
+    border: 2px solid lightgrey;
+    border-radius: 5px;
+    color: lightgrey;
+    cursor: default;
+    font-size: 1.5rem;
+    padding: 10px;
 }
 
 html {
@@ -162,6 +201,22 @@ input::placeholder {
     text-align: center;
 }
 
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background: #242424;
+}
+
+::-webkit-scrollbar-thumb {
+    background: lightgray;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: white;
+}
 
 @media screen and (min-width: 480px) {
     .description {
@@ -195,11 +250,19 @@ input::placeholder {
         max-width: 50vw;
         min-width: 40vw;
     }
+    .side-by-side {
+        height: 25vh;
+        width: 25vw;
+    }
 }
 
 @media screen and (min-width: 1200px) {
     .description {
         max-width: 40vw;
         min-width: 30vw;
+    }
+    .side-by-side {
+        height: 20vh;
+        width: 20vw;
     }
 }
