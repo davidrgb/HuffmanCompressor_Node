@@ -59,32 +59,14 @@
 }
 
 .side-by-side {
-    width: 30vw;
-    height: 30vh;
+    width: 35vw;
+    height: 35vh;
 }
 
 .character-div {
     display: inline;
     cursor: pointer;
     max-height: 1.5rem;
-}
-
-@keyframes character-hover-in {
-    0% {
-        color: white;
-    }
-    100% {
-        color: lightseagreen;
-    }
-}
-
-@keyframes character-hover-out {
-    0% {
-        color: lightseagreen;
-    }
-    100% {
-        color: white;
-    }
 }
 
 body {
@@ -119,9 +101,9 @@ button:hover {
 
 button:disabled {
     background-color: #242424;
-    border: 2px solid lightgrey;
+    border: 2px solid grey;
     border-radius: 5px;
-    color: lightgrey;
+    color: grey;
     cursor: default;
     font-size: 1.5rem;
     padding: 10px;
