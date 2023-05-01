@@ -166,7 +166,7 @@ async function buildSideBySide(text, head) {
     textDiv.style = 'border: 2px solid white; border-radius: 5px; font-size: 1.25rem; font-weight: bold; padding: 5px; overflow-x: hidden; overflow-y: scroll;';
     textDiv.className = 'side-by-side';
     let codeDiv = document.createElement('div-code');
-    codeDiv.style = 'border: 2px solid white; border-radius: 5px; display: flex; flex-direction: row; flex-wrap: wrap; font-size: 1.25rem; font-weight: bold; padding: 5px;overflow-x: hidden; overflow-y: scroll;';
+    codeDiv.style = 'align-content: start; border: 2px solid white; border-radius: 5px; display: flex; flex-direction: row; flex-wrap: wrap; font-size: 1.25rem; font-weight: bold; padding: 5px; overflow-x: hidden; overflow-y: scroll;';
     codeDiv.className = 'side-by-side';
     let navigationDiv = document.createElement('div');
     navigationDiv.style = 'align-items: center; display: flex; flex-direction: row; gap: 2rem; justify-content: center;';
