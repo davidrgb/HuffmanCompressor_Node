@@ -1,3 +1,5 @@
+import * as Constant from '../model/constant.js';
+
 export function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -150,4 +152,18 @@ export function displayCharacter(character) {
         default:
             return character;
     }
+}
+
+export async function disableButton(button) {
+    let label = button.innerHTML;
+    button.disabled = true;
+    button.innerHTML = Constant.WORKING_BUTTON_LABEL;
+    await sleep(10);
+    return label;
+}
+
+export async function enableButton(button, label) {
+    button.innerHTML = label;
+    button.disabled = false;
+    await sleep(10);
 }
