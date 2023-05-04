@@ -1,8 +1,6 @@
 import * as Decompressor from '../controller/decompressor.js';
 import * as Utility from '../controller/utility.js';
 
-import * as Constant from '../model/constant.js';
-
 import * as Element from './element.js';
 import * as SideBySide from './sideBySide.js';
 
@@ -23,7 +21,7 @@ export async function decompressionPage() {
                         <br>
                         <div style="display:flex; justify-content: space-around; width:100%;">
                             <button id="button-upload" type="button">Upload</button>
-                            <button id="button-submit" type="submit">Decompress</button>
+                            <button id="button-submit" style="display: none;" type="submit">Decompress</button>
                         </div>
                     </form>
                 </div>
@@ -58,40 +56,58 @@ export async function decompressionPage() {
 
     let tree, numberOfBits, bytes;
 
-    document.getElementById('file-upload').onchange = async e => {
+    const uploadFile = document.getElementById('file-upload');
+    uploadFile.onchange = async e => {
         await Utility.fadeOut();
-        document.getElementById('input-error').style = 'display: none';
-        document.getElementById('div-page').style = 'display: none';
-        document.getElementById('div-uploading').style = 'display: block';
+
+        const inputErrorElement = document.getElementById('input-error');
+        inputErrorElement.style = 'display: none';
+        const pageDiv = document.getElementById('div-page');
+        pageDiv.style = 'display: none';
+        const uploadingDiv = document.getElementById('div-uploading');
+        uploadingDiv.style = 'display: block';
+
         await Utility.fadeIn();
 
-        let file = e.target.files[0];
-        var reader = new FileReader();
+        const file = e.target.files[0];
+        const reader = new FileReader();
 
         reader.readAsArrayBuffer(file);
         reader.onload = async readerEvent => {
-            let utf8text = new Uint8Array(readerEvent.target.result);                   // Get full content of compressed file as byte array to preserve character encoding
-            let encoder = new TextEncoder();                                            // Create an encoder to convert strings to UTF-8 byte arrays
-            let decoder = new TextDecoder();                                            // Create a decoder to convert UTF-8 byte arrays to strings
-            let text = decoder.decode(utf8text);                                        // Decode full UTF-8 byte array of compressed file to a string
-            let sections = text.split('\n\n');                                          // Split the string into the tree, numberOfBits, and bytes sections
-            tree = sections[0];                                                         // Assign the tree section string
-            numberOfBits = Number(sections[1]);                                         // Convert and assign the numberOfBits section string
-            let index = encoder.encode(tree).length + encoder.encode('\n\n').length     // Calculate the index of the beginning of the bytes section in the
-                        + encoder.encode(numberOfBits.toString()).length                // original UTF-8 byte array by encoding the tree and numberOfBits sections
-                        + encoder.encode('\n\n').length;                                // as well as the newline separators.
-            bytes = utf8text.subarray(index);                                           // Assign the subarray of UTF-8 bytes (these bytes cannot be decoded before decompression since some integers are not represented by characters)
-            document.getElementById('textarea-input').value = text;                     // Set the value of the textarea to the fully decoded UTF-8 bytes
-            document.getElementById('button-submit').click();
+            const utf8text = new Uint8Array(readerEvent.target.result);                     // A. Get full content of compressed file as byte array to preserve character encoding
+            const encoder = new TextEncoder();                                              // B. Create an encoder to convert strings to UTF-8 byte arrays
+            const decoder = new TextDecoder();                                              // C. Create a decoder to convert UTF-8 byte arrays to strings
+            const text = decoder.decode(utf8text);                                          // D. Decode full UTF-8 byte array of compressed file to a string
+            
+            const sections = text.split('\n\n');                                            // E. Split the string into the tree, numberOfBits, and bytes sections
+            tree = sections[0];                                                             // F. Assign the tree section string
+            numberOfBits = Number(sections[1]);                                             // G. Convert and assign the numberOfBits section string
+            const index = encoder.encode(tree).length + encoder.encode('\n\n').length       // H. Calculate the index of the beginning of the bytes section in the
+                        + encoder.encode(numberOfBits.toString()).length                    //    original UTF-8 byte array by encoding the tree and numberOfBits sections
+                        + encoder.encode('\n\n').length;                                    //    as well as the newline separators.
+            bytes = utf8text.subarray(index);                                               // I. Assign the subarray of UTF-8 bytes (these bytes cannot be decoded before decompression since some integers are not represented by characters)
+            
+            const inputTextArea = document.getElementById('textarea-input');
+            inputTextArea.value = text;                                                     // J. Set the value of the textarea to the fully decoded UTF-8 bytes
+            const submitButton = document.getElementById('button-submit');
+            submitButton.click();                                                           // K. Submit the form for decompression
         }
     };
 
-    document.getElementById('button-upload').addEventListener('click', function() {
+    const uploadButton = document.getElementById('button-upload');
+    uploadButton.addEventListener('click', async function() {
+        const label = await Utility.disableButton(uploadButton);
+
         document.getElementById('file-upload').click();
+        await Utility.sleep(50);
+
+        await Utility.enableButton(uploadButton, label);
     });
 
-    document.getElementById('form-decompress').addEventListener('submit', async e => {
+    const decompressForm = document.getElementById('form-decompress');
+    decompressForm.addEventListener('submit', async e => {
         e.preventDefault();
+
         const text = e.target.input.value;
         if (text === null || text.length == 0) {
             let filenameErrorElement = document.getElementById('input-error');
@@ -99,14 +115,18 @@ export async function decompressionPage() {
             filenameErrorElement.innerHTML = 'Input required';
             return;
         }
+
         await Utility.fadeOut();
+
         await decompressionProgressPage();
         const data = await Decompressor.decompress({
             tree: tree,
             numberOfBits: numberOfBits,
             bytes: bytes,
         });
+
         await Utility.fadeOut();
+
         await postDecompressionPage(data);
     });
 }
@@ -122,14 +142,17 @@ async function decompressionProgressPage() {
             </div>
         </div>
     `;
+
     Element.root.innerHTML = html;
+
     await Utility.fadeIn();
 }
 
 async function postDecompressionPage(data) {
-    let encoder = new TextEncoder();
-    let inputSize = (encoder.encode(data.tree).length + `\n\n${data.numberOfBits}\n\n`.length + data.bytes.length) * 8;
-    let outputSize = encoder.encode(data.text).length * 8;
+    const encoder = new TextEncoder();
+    const inputSize = (encoder.encode(data.tree).length + `\n\n${data.numberOfBits}\n\n`.length + data.bytes.length) * 8;
+    const outputSize = encoder.encode(data.text).length * 8;
+
     let html = `
         <div style="align-items:center; display:flex; flex-wrap:wrap; height:100vh; justify-content:center; max-width:90vw; min-width:70vw;">
             <div id="div-post-decompression" style="padding: 5vh 5vw">
@@ -155,21 +178,25 @@ async function postDecompressionPage(data) {
 
     Element.root.innerHTML = html;
 
-    document.getElementById('div-post-decompression').appendChild(await SideBySide.buildSideBySide(data.text, data.head));
+    const postDecompressionDiv = document.getElementById('div-post-decompression');
+    postDecompressionDiv.appendChild(await SideBySide.buildSideBySide(data.text, data.head));
 
     await Utility.fadeIn();
 
-    document.getElementById('form-download-decompressed-file').addEventListener('submit', async e => {
+    const downloadDecompressedFileForm = document.getElementById('form-download-decompressed-file');
+    downloadDecompressedFileForm.addEventListener('submit', async e => {
         e.preventDefault();
+
         const filename = e.target.filename.value;
-        let error = Utility.validateFilename(filename);
+        const error = Utility.validateFilename(filename);
+        const filenameErrorElement = document.getElementById('filename-error');
         if (error != null) {
-            let filenameErrorElement = document.getElementById('filename-error');
             filenameErrorElement.style = 'color:red; display:inline; font-weight:bold;';
             filenameErrorElement.innerHTML = error;
         }
         else {
-            document.getElementById('filename-error').style = 'display:none';
+            filenameErrorElement.style = 'display:none';
+
             await Decompressor.createAndDownloadFile(data, filename);
         }
     });

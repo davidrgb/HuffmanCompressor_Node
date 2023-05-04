@@ -1,8 +1,6 @@
 import * as Compressor from '../controller/compressor.js';
 import * as Utility from '../controller/utility.js';
 
-import * as Constant from '../model/constant.js';
-
 import * as Element from './element.js';
 import * as SideBySide from './sideBySide.js';
 
@@ -55,39 +53,63 @@ export async function compressionPage() {
 
     await Utility.fadeIn();
 
-    document.getElementById('file-upload').onchange = async e => {
+    const fileUpload = document.getElementById('file-upload');
+    fileUpload.onchange = async e => {
         await Utility.fadeOut();
-        document.getElementById('input-error').style = 'display: none';
-        document.getElementById('div-page').style = 'display: none';
-        document.getElementById('div-uploading').style = 'display: block';
+
+        const inputErrorElement = document.getElementById('input-error');
+        inputErrorElement.style = 'display: none';
+        const pageDiv = document.getElementById('div-page');
+        pageDiv.style = 'display: none';
+        const uploadingDiv = document.getElementById('div-uploading');
+        uploadingDiv.style = 'display: block';
+
         await Utility.fadeIn();
-        let file = e.target.files[0];
-        var reader = new FileReader();
+
+        const file = e.target.files[0];
+        const reader = new FileReader();
         reader.readAsText(file, 'UTF-8');
-        reader.onload = async readerEvent => {
-            document.getElementById('textarea-input').value = readerEvent.target.result;
-            document.getElementById('button-submit').click();
-        }
-        
+        reader.onload = readerEvent => {
+            const inputTextArea = document.getElementById('textarea-input');
+            inputTextArea.value = readerEvent.target.result;
+            const submitButton = document.getElementById('button-submit');
+            submitButton.click();
+        }    
     }
 
-    document.getElementById('button-upload').addEventListener('click', function() {
+    const uploadButton = document.getElementById('button-upload');
+    uploadButton.addEventListener('click', async () => {
+        const label = await Utility.disableButton(uploadButton);
+
         document.getElementById('file-upload').click();
+        await Utility.sleep(50);
+
+        await Utility.enableButton(uploadButton, label);
     });
 
-    document.getElementById('form-compress').addEventListener('submit', async e => {
+    const compressForm = document.getElementById('form-compress');
+    compressForm.addEventListener('submit', async e => {
         e.preventDefault();
+
+        const submitButton = document.getElementById('button-submit');
+        const label = await Utility.disableButton(submitButton);
+
         const text = e.target.input.value;
         if (text === null || text.length == 0) {
-            let filenameErrorElement = document.getElementById('input-error');
+            const filenameErrorElement = document.getElementById('input-error');
             filenameErrorElement.style = 'color:red; display:inline; font-weight:bold;';
             filenameErrorElement.innerHTML = 'Input required';
+            await Utility.enableButton(submitButton, label);
             return;
         }
+
         await Utility.fadeOut();
+
         await compressionProgressPage();
         const data = await Compressor.compress(text);
+
         await Utility.fadeOut();
+
         await postCompressionPage(data);
     });
 }
@@ -103,14 +125,17 @@ async function compressionProgressPage() {
             </div>
         </div>
     `;
+
     Element.root.innerHTML = html;
+    
     await Utility.fadeIn();
 }
 
 async function postCompressionPage(data) {
-    let encoder = new TextEncoder();
-    let inputSize = encoder.encode(data.text).length * 8;
-    let outputSize = (encoder.encode(data.tree).length + `\n\n${data.numberOfBits}`.length + data.bytes.length) * 8;
+    const encoder = new TextEncoder();
+    const inputSize = encoder.encode(data.text).length * 8;
+    const outputSize = (encoder.encode(data.tree).length + `\n\n${data.numberOfBits}`.length + data.bytes.length) * 8;
+
     let html = `
         <div style="align-items:center; display:flex; flex-wrap:wrap; height:100vh; justify-content:center; max-width:90vw; min-width:70vw;">
             <div id="div-post-compression"  style="padding: 5vh 5vw">
@@ -136,21 +161,25 @@ async function postCompressionPage(data) {
 
     Element.root.innerHTML = html;
 
-    document.getElementById('div-post-compression').appendChild(await SideBySide.buildSideBySide(data.text, data.head));
+    const postCompressionDiv = document.getElementById('div-post-compression');
+    postCompressionDiv.appendChild(await SideBySide.buildSideBySide(data.text, data.head));
 
     await Utility.fadeIn();
     
-    document.getElementById('form-download-compressed-file').addEventListener('submit', async e => {
+    const downloadCompressedFileForm = document.getElementById('form-download-compressed-file');
+    downloadCompressedFileForm.addEventListener('submit', async e => {
         e.preventDefault();
+
         const filename = e.target.filename.value;
-        let error = Utility.validateFilename(filename);
+        const error = Utility.validateFilename(filename);
+        const filenameErrorElement = document.getElementById('filename-error');
         if (error != null) {
-            let filenameErrorElement = document.getElementById('filename-error');
             filenameErrorElement.style = 'color:red; display:inline; font-weight:bold;';
             filenameErrorElement.innerHTML = error;
         }
         else {
-            document.getElementById('filename-error').style = 'display:none';
+            filenameErrorElement.style = 'display:none';
+
             await Compressor.createAndDownloadFile(data, filename);
         }
     });
