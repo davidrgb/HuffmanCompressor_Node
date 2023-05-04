@@ -58,7 +58,7 @@ async function reconstructText(bytes, head, numberOfBits) {
     let currentNode = head;
 
     for (let i = 0; i < bytes.length; i++) {
-        const string = binaryStringFromNumber(bytes[i]);
+        let string = binaryStringFromNumber(bytes[i]);
         while (string.length > 0) {
             const bit = string[0];
             string = string.substring(1);
