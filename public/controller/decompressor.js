@@ -5,13 +5,16 @@ import { TreeNode } from '../model/treeNode.js';
 const WORD_LENGTH = 8;
 
 function setDecompressionStatus(state) {
-    document.getElementById('decompression-status').innerHTML = state;
+    const decompressionStatusElement = document.getElementById('decompression-status');
+    decompressionStatusElement.innerHTML = state;
 }
 
 async function reconstructTree(tree) {
     setDecompressionStatus('Reconstructing tree');
     await Utility.sleep(50);
-    let head = new TreeNode();
+
+    const head = new TreeNode();
+
     let currentNode = head;
     for (let i = 0; i < tree.length; i++) {
         while (!currentNode.isBridge) currentNode = currentNode.parent;
@@ -43,19 +46,21 @@ async function reconstructTree(tree) {
             while (currentNode != null && currentNode.leftChild != null && currentNode.rightChild != null) currentNode = currentNode.parent;
         }
     }
+
     return head;
 }
 
 async function reconstructText(bytes, head, numberOfBits) {
     setDecompressionStatus('Reconstructing text');
     await Utility.sleep(50);
+
     let text = "";
     let currentNode = head;
 
     for (let i = 0; i < bytes.length; i++) {
-        let string = binaryStringFromNumber(bytes[i]);
+        const string = binaryStringFromNumber(bytes[i]);
         while (string.length > 0) {
-            let bit = string[0];
+            const bit = string[0];
             string = string.substring(1);
             if (numberOfBits > 0) {
                 if (bit === '0') currentNode = currentNode.leftChild;
@@ -79,12 +84,16 @@ function binaryStringFromNumber(number) {
 
 export async function decompress(data) {
     const tree = data.tree;
+
     const head = await reconstructTree(tree);
     await Utility.sleep(250);
+
     let numberOfBits = data.numberOfBits;
     const bytes = data.bytes;
+
     const text = await reconstructText(bytes, head, numberOfBits);
     await Utility.sleep(250);
+    
     return {
         text: text,
         tree: tree,
