@@ -1,9 +1,8 @@
 import * as Compressor from '../controller/compressor.js';
 import * as Utility from '../controller/utility.js';
 
-import * as Constant from '../model/constant.js';
-
 import * as Element from './element.js';
+import * as SideBySide from './sideBySide.js';
 
 export async function compressionPage() {
     let html = `
@@ -54,39 +53,63 @@ export async function compressionPage() {
 
     await Utility.fadeIn();
 
-    document.getElementById('file-upload').onchange = async e => {
+    const fileUpload = document.getElementById('file-upload');
+    fileUpload.onchange = async e => {
         await Utility.fadeOut();
-        document.getElementById('input-error').style = 'display: none';
-        document.getElementById('div-page').style = 'display: none';
-        document.getElementById('div-uploading').style = 'display: block';
+
+        const inputErrorElement = document.getElementById('input-error');
+        inputErrorElement.style = 'display: none';
+        const pageDiv = document.getElementById('div-page');
+        pageDiv.style = 'display: none';
+        const uploadingDiv = document.getElementById('div-uploading');
+        uploadingDiv.style = 'display: block';
+
         await Utility.fadeIn();
-        let file = e.target.files[0];
-        var reader = new FileReader();
+
+        const file = e.target.files[0];
+        const reader = new FileReader();
         reader.readAsText(file, 'UTF-8');
-        reader.onload = async readerEvent => {
-            document.getElementById('textarea-input').value = readerEvent.target.result;
-            document.getElementById('button-submit').click();
-        }
-        
+        reader.onload = readerEvent => {
+            const inputTextArea = document.getElementById('textarea-input');
+            inputTextArea.value = readerEvent.target.result;
+            const submitButton = document.getElementById('button-submit');
+            submitButton.click();
+        }    
     }
 
-    document.getElementById('button-upload').addEventListener('click', function() {
+    const uploadButton = document.getElementById('button-upload');
+    uploadButton.addEventListener('click', async () => {
+        const label = await Utility.disableButton(uploadButton);
+
         document.getElementById('file-upload').click();
+        await Utility.sleep(50);
+
+        await Utility.enableButton(uploadButton, label);
     });
 
-    document.getElementById('form-compress').addEventListener('submit', async e => {
+    const compressForm = document.getElementById('form-compress');
+    compressForm.addEventListener('submit', async e => {
         e.preventDefault();
+
+        const submitButton = document.getElementById('button-submit');
+        const label = await Utility.disableButton(submitButton);
+
         const text = e.target.input.value;
         if (text === null || text.length == 0) {
-            let filenameErrorElement = document.getElementById('input-error');
+            const filenameErrorElement = document.getElementById('input-error');
             filenameErrorElement.style = 'color:red; display:inline; font-weight:bold;';
             filenameErrorElement.innerHTML = 'Input required';
+            await Utility.enableButton(submitButton, label);
             return;
         }
+
         await Utility.fadeOut();
+
         await compressionProgressPage();
         const data = await Compressor.compress(text);
+
         await Utility.fadeOut();
+
         await postCompressionPage(data);
     });
 }
@@ -102,14 +125,17 @@ async function compressionProgressPage() {
             </div>
         </div>
     `;
+
     Element.root.innerHTML = html;
+    
     await Utility.fadeIn();
 }
 
 async function postCompressionPage(data) {
-    let encoder = new TextEncoder();
-    let inputSize = encoder.encode(data.text).length * 8;
-    let outputSize = (encoder.encode(data.tree).length + `\n\n${data.numberOfBits}`.length + data.bytes.length) * 8;
+    const encoder = new TextEncoder();
+    const inputSize = encoder.encode(data.text).length * 8;
+    const outputSize = (encoder.encode(data.tree).length + `\n\n${data.numberOfBits}`.length + data.bytes.length) * 8;
+
     let html = `
         <div style="align-items:center; display:flex; flex-wrap:wrap; height:100vh; justify-content:center; max-width:90vw; min-width:70vw;">
             <div id="div-post-compression"  style="padding: 5vh 5vw">
@@ -135,176 +161,26 @@ async function postCompressionPage(data) {
 
     Element.root.innerHTML = html;
 
-    document.getElementById('div-post-compression').appendChild(await buildSideBySide(data.text, data.head));
+    const postCompressionDiv = document.getElementById('div-post-compression');
+    postCompressionDiv.appendChild(await SideBySide.buildSideBySide(data.text, data.head));
 
     await Utility.fadeIn();
     
-    document.getElementById('form-download-compressed-file').addEventListener('submit', async e => {
+    const downloadCompressedFileForm = document.getElementById('form-download-compressed-file');
+    downloadCompressedFileForm.addEventListener('submit', async e => {
         e.preventDefault();
+
         const filename = e.target.filename.value;
-        let error = Utility.validateFilename(filename);
+        const error = Utility.validateFilename(filename);
+        const filenameErrorElement = document.getElementById('filename-error');
         if (error != null) {
-            let filenameErrorElement = document.getElementById('filename-error');
             filenameErrorElement.style = 'color:red; display:inline; font-weight:bold;';
             filenameErrorElement.innerHTML = error;
         }
         else {
-            document.getElementById('filename-error').style = 'display:none';
+            filenameErrorElement.style = 'display:none';
+
             await Compressor.createAndDownloadFile(data, filename);
         }
     });
-}
-
-async function buildSideBySide(text, head) {
-    let outerDiv = document.createElement('div');
-    outerDiv.id = 'div-side-by-side';
-    outerDiv.style = 'align-items: center; display: flex; flex-direction: column; gap: 5vh; justify-content: center; max-width: 90vw; padding-top: 5vh;';
-    outerDiv.className = 'third-fade';
-    let mainDiv = document.createElement('div');
-    mainDiv.style = 'align-items: center; display: flex; flex-direction: row; gap: 5vw; justify-content: center;';
-    let textDiv = document.createElement('div-text');
-    textDiv.style = 'border: 2px solid white; border-radius: 5px; font-size: 1.25rem; font-weight: bold; padding: 5px; overflow-x: hidden; overflow-y: scroll;';
-    textDiv.className = 'side-by-side';
-    let codeDiv = document.createElement('div-code');
-    codeDiv.style = 'align-content: start; border: 2px solid white; border-radius: 5px; display: flex; flex-direction: row; flex-wrap: wrap; font-size: 1.25rem; font-weight: bold; padding: 5px; overflow-x: hidden; overflow-y: scroll;';
-    codeDiv.className = 'side-by-side';
-    let navigationDiv = document.createElement('div');
-    navigationDiv.style = 'align-items: center; display: flex; flex-direction: row; gap: 2rem; justify-content: center;';
-    await buildSideBySidePage(mainDiv, textDiv, codeDiv, navigationDiv, text, head, 1);
-    mainDiv.appendChild(textDiv);
-    mainDiv.appendChild(codeDiv);
-    outerDiv.appendChild(mainDiv);
-    outerDiv.appendChild(navigationDiv);
-    return outerDiv;
-}
-
-async function buildSideBySidePage(mainDiv, textDiv, codeDiv, navigationDiv, text, head, page) {
-    textDiv.innerHTML = "";
-    codeDiv.innerHTML = "";
-    navigationDiv.innerHTML = "";
-    let start = Constant.CHARACTERS_PER_PAGE * (page - 1);
-    let end = text.length < Constant.CHARACTERS_PER_PAGE * page ? text.length : Constant.CHARACTERS_PER_PAGE * page;
-    for (let i = start; i < end; i++) {
-        let character = text[i];
-        let characterDiv = document.createElement('div');
-        characterDiv.className = `character-div character-${i}`;
-        characterDiv.innerHTML = character;
-        textDiv.appendChild(characterDiv);
-        characterDiv.addEventListener('mouseover', (e) => {
-            mainDiv.querySelectorAll(`.character-${i}`).forEach((classDiv) => {
-                classDiv.animate(
-                    [
-                        {
-                            backgroundColor: '#242424',
-                            color: 'white',
-                        },
-                        {
-                            backgroundColor: 'white',
-                            color: '#242424',
-                        }
-                    ],
-                    {
-                        duration: 250,
-                        fill: 'forwards',
-                    }
-                );
-            });   
-        });
-        characterDiv.addEventListener('mouseleave', (e) => {
-            mainDiv.querySelectorAll(`.character-${i}`).forEach((classDiv) => {
-                classDiv.animate(
-                    [
-                        {
-                            backgroundColor: 'white',
-                            color: '#242424',
-                        },
-                        {
-                            backgroundColor: '#242424',
-                            color: 'white',
-                        }
-                    ],
-                    {
-                        duration: 250,
-                        fill: 'forwards',
-                    }
-                );
-            }); 
-        });
-        characterDiv.addEventListener('click', (e) => {
-            codeDiv.querySelector(`.character-${i}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
-        });
-        let characterCodeDiv = document.createElement('div');
-        characterCodeDiv.className = `character-div character-${i}`;
-        characterCodeDiv.innerHTML = head.getCode(character, '');
-        codeDiv.appendChild(characterCodeDiv);
-        characterCodeDiv.addEventListener('mouseover', (e) => {
-            mainDiv.querySelectorAll(`.character-${i}`).forEach((classDiv) => {
-                classDiv.animate(
-                    [
-                        {
-                            backgroundColor: '#242424',
-                            color: 'white',
-                        },
-                        {
-                            backgroundColor: 'white',
-                            color: '#242424',
-                        }
-                    ],
-                    {
-                        duration: 250,
-                        fill: 'forwards',
-                    }
-                );
-            });
-        });
-        characterCodeDiv.addEventListener('mouseleave', (e) => {
-            mainDiv.querySelectorAll(`.character-${i}`).forEach((classDiv) => {
-                classDiv.animate(
-                    [
-                        {
-                            backgroundColor: 'white',
-                            color: '#242424',
-                        },
-                        {
-                            backgroundColor: '#242424',
-                            color: 'white',
-                        }
-                    ],
-                    {
-                        duration: 250,
-                        fill: 'forwards',
-                    }
-                );
-            }); 
-        });
-        characterCodeDiv.addEventListener('click', (e) => {
-            textDiv.querySelector(`.character-${i}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
-        });
-    }
-    let previousButton = document.createElement('button');
-    previousButton.innerHTML = 'Prev';
-    if (page === 1) previousButton.disabled = true;
-    else {
-        previousButton.disabled = false;
-        previousButton.addEventListener('click', async () => {
-            await buildSideBySidePage(mainDiv, textDiv, codeDiv, navigationDiv, text, head, page - 1);
-        });
-    }
-    if (text.length > Constant.CHARACTERS_PER_PAGE) {
-        navigationDiv.appendChild(previousButton);
-        let pageNumber = document.createElement('div');
-        pageNumber.style = 'display: inline; font-size: 2rem; font-weight: bold;';
-        pageNumber.innerHTML = page;
-        navigationDiv.appendChild(pageNumber);
-        let nextButton = document.createElement('button');
-        nextButton.innerHTML = 'Next';
-        if (text.length <= Constant.CHARACTERS_PER_PAGE * page) nextButton.disabled = true;
-        else {
-            nextButton.disabled = false;
-            nextButton.addEventListener('click', async () => {
-                await buildSideBySidePage(mainDiv, textDiv, codeDiv, navigationDiv, text, head, page + 1);
-            });
-        }
-        navigationDiv.appendChild(nextButton);
-    }
 }
